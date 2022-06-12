@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "tailwind:generate": "tailwindcss -i src/style.css -o src/compiled-style.css",
     "start": "http-server src/ -p 3000"
   },
   "keywords": [],
