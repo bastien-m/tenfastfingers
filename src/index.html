@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./compiled-style.css" rel="stylesheet">
+    <title>10 Fast Finger</title>
+</head>
+<body class="h-full">
+
+    <h1 class="flex justify-center">
+        10 Fast fingers
+    </h1>
+    <!-- container -->
+    <div class="flex flex-col items-center">
+        <!-- word container -->
+        <div class="mb-2 w-1/2 h-32 bg-teal-100 border-solid border-2 border-sky-300 overflow-hidden text-2xl" id="words-container"></div>
+        <input class="p-1 w-1/4 shadow-inner border-solid border-2 border-sky-500 w-30" type="text" name="word" id="word"/>
+
+        <!-- Result -->
+        <div class="mt-6">
+            <h2>Résultats</h2>
+            <p>Mots corrects : <span id="correctWords"></span></p>
+            <p>Caractères corrects : <span id="correctChars"></span></p>
+            <p>Mots incorrects : <span id="incorrectWords"></span></p>
+            <p>Charactères incorrects : <span id="incorrectCharacters"></span></p>
+            
+        </div>
+    </div>
+    
+
+
+    <script>
+        let wordList = ["homme", "femme", "touriste", "punk", "chien", "dehors", "orage", "homme", "femme", "touriste", "punk", "chien", "dehors", "orage", "homme", "femme", "touriste", "punk", "chien", "dehors", "orage", "homme", "femme", "touriste", "punk", "chien", "dehors", "orage", "homme", "femme", "touriste", "punk", "chien", "dehors", "orage", "homme", "femme", "touriste", "punk", "chien", "dehors", "orage", "homme", "femme", "touriste", "punk", "chien", "dehors", "orage", "homme", "femme", "touriste", "punk", "chien", "dehors", "orage", "homme", "femme", "touriste", "punk", "chien", "dehors", "orage"]
+        const inputField = document.getElementById("word")
+        const correctWordSpan = document.getElementById("correctWords")
+        const correctCharSpan = document.getElementById("correctChars")
+        const incorrectWordSpan = document.getElementById("incorrectWords")
+        const incorrectCharSpan = document.getElementById("incorrectCharacters")
+        const wordsContainer = document.getElementById("words-container")
+
+        let result = {
+            validWord: 0,
+            validChar: 0,
+            invalidWord: 0,
+            invalidChar: 0
+        }
+
+        /**
+         * @param {string} inputValue
+         * @param {string} expectedWord
+         * @return {boolean}
+         */
+        const isCorrect = (inputValue, expectedWord) => {
+            console.log(`inputValue = ${inputValue} expectedWord = ${expectedWord}`)
+            return inputValue.trim() === expectedWord
+        }
+
+        /**
+         * @param {Object} result
+         * @param {number} result.validWord
+         * @param {number} result.validChar
+         * @param {number} result.invalidWord
+         * @param {number} result.invalidChar
+         */
+        const updateScoreBoard = (result) => {
+            correctWordSpan.innerText = result.validWord
+            correctCharSpan.innerText = result.validChar
+            incorrectWordSpan.innerText = result.invalidWord
+            incorrectCharSpan.innerText = result.invalidChar
+        }
+
+        /**
+         * @param {string[]} wordList
+         */
+        const printWords = (wordList) => {
+            wordList.map(word => {
+                const span = document.createElement("span")
+                span.classList.add("word", "inline-block", "bg-lime-400", "m-1")
+                span.innerText = word
+                return span
+            }).forEach(span => wordsContainer.appendChild(span))
+            
+        }
+        
+        
+        const removeCurrentWordFromHtml = () => {
+           wordsContainer.removeChild(wordsContainer.firstChild)
+        }
+        
+        /**
+         * @param {KeyboardEvent} event 
+         */
+        const handleKeyDown = (event) => {
+            if (event.code === "Space") {
+                event.preventDefault()
+                const wordEntered = inputField.value
+                const expectedWord = wordList.shift()
+                if (isCorrect(wordEntered, expectedWord)) {
+                    console.log("correct")
+                    result.validChar += expectedWord.length
+                    result.validWord++
+                } else {
+                    console.log("incorrect")
+                    result.invalidChar += expectedWord.length
+                    result.invalidWord++
+                }
+                inputField.value = ""
+                updateScoreBoard(result)
+                removeCurrentWordFromHtml()
+            }
+        }
+
+        const main = () => {
+            inputField.onkeydown = handleKeyDown
+            printWords(wordList)
+        }
+
+
+        (() => {
+            main()
+        })()
+    </script>
+</body>
+</html>
